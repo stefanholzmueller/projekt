@@ -12,20 +12,24 @@ import Halogen.HTML.Events (onClick)
 import Halogen.Util (awaitBody, runHalogenAff)
 
 
-data Position = Position String String
+data Position = Position Number Number
 data City = City String Position
 
 tennenlohe :: City
-tennenlohe = City "Tennenlohe" (Position "20%" "50%")
+tennenlohe = City "Tennenlohe" (Position 0.2 0.5)
 
 leipzig :: City
-leipzig = City "Leipzig" (Position "70%" "60%")
+leipzig = City "Leipzig" (Position 0.7 0.6)
 
 cities :: Array City
 cities = [ tennenlohe, leipzig ]
 
 connections :: Array (Tuple City City)
 connections = [ Tuple tennenlohe leipzig ]
+
+
+showPercent :: Number -> String
+showPercent n = (show (n * 100.0)) <> "%"
 
 
 data Query a = MovePlayer City a
@@ -43,33 +47,41 @@ ui = H.component { render, eval }
   svgAttr name value = Attr Nothing (attrName name) value
 
   svgCity city@(City cityName (Position x y)) =
-    Element svgns (tagName "circle") [ svgAttr "class" "city"
-                                     , svgAttr "r" "10"
-                                     , svgAttr "cx" x
-                                     , svgAttr "cy" y
+    [ Element svgns (tagName "circle") [ svgAttr "class" "city"
+                                       , svgAttr "r" "10"
+                                       , svgAttr "cx" (showPercent x)
+                                       , svgAttr "cy" (showPercent y)
+                                       , onClick (HE.input_ (MovePlayer city))
+                                       ] []
+    , Element svgns (tagName "text") [ svgAttr "class" "city-label"
+                                     , svgAttr "x" (showPercent x)
+                                     , svgAttr "y" (showPercent (y + 0.02))
+                                     , svgAttr "text-anchor" "middle"
+                                     , svgAttr "alignment-baseline" "central"
                                      , onClick (HE.input_ (MovePlayer city))
-                                     ] []
+                                     ] [ HH.text cityName ]
+    ]
 
   svgConnection (Tuple (City cn1 (Position x1 y1)) (City cn2 (Position x2 y2))) =
     Element svgns (tagName "line") [ svgAttr "class" "connection"
-                                   , svgAttr "x1" x1
-                                   , svgAttr "y1" y1
-                                   , svgAttr "x2" x2
-                                   , svgAttr "y2" y2
+                                   , svgAttr "x1" (showPercent x1)
+                                   , svgAttr "y1" (showPercent y1)
+                                   , svgAttr "x2" (showPercent x2)
+                                   , svgAttr "y2" (showPercent y2)
                                    ] []
 
   svgPlayer (Position x y) =
     Element svgns (tagName "circle") [ svgAttr "class" "player"
                                      , svgAttr "r" "12"
-                                     , svgAttr "cx" x
-                                     , svgAttr "cy" y
+                                     , svgAttr "cx" (showPercent x)
+                                     , svgAttr "cy" (showPercent y)
                                      ] []
 
   render :: State -> H.ComponentHTML Query
   render state =
     HH.div_
       [ Element svgns (tagName "svg") []
-          ((map svgConnection connections) <> (map svgCity cities) <>
+          ((map svgConnection connections) <> (cities >>= svgCity) <>
           [ svgPlayer (case state.playerPosition of City cityName position -> position)
           ])
       ]
