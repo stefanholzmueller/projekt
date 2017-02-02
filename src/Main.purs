@@ -34,12 +34,12 @@ showPercent n = (show (n * 100.0)) <> "%"
 
 data Query a = MovePlayer City a
 
-type State = { playerPosition :: City }
+type UiState = { playerPosition :: City }
 
-initialState :: State
+initialState :: UiState
 initialState = { playerPosition: tennenlohe }
 
-ui :: forall g. H.Component State Query g
+ui :: forall g. H.Component UiState Query g
 ui = H.component { render, eval }
   where
 
@@ -77,7 +77,7 @@ ui = H.component { render, eval }
                                      , svgAttr "cy" (showPercent y)
                                      ] []
 
-  render :: State -> H.ComponentHTML Query
+  render :: UiState -> H.ComponentHTML Query
   render state =
     HH.div_
       [ Element svgns (tagName "svg") []
@@ -86,7 +86,7 @@ ui = H.component { render, eval }
           ])
       ]
 
-  eval :: Query ~> H.ComponentDSL State Query g
+  eval :: Query ~> H.ComponentDSL UiState Query g
   eval (MovePlayer city next) = do
     H.modify (\state -> { playerPosition: city })
     pure next
