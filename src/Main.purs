@@ -15,7 +15,7 @@ import Halogen.Util (awaitBody, runHalogenAff)
 type Position = { x :: Number, y :: Number }
 
 pos :: Number -> Number -> Position
-pos = { x: _, y: _ }
+pos x y = { x, y }
 
 data City = City String Position
 
