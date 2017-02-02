@@ -12,14 +12,18 @@ import Halogen.HTML.Events (onClick)
 import Halogen.Util (awaitBody, runHalogenAff)
 
 
-data Position = Position Number Number
+type Position = { x :: Number, y :: Number }
+
+pos :: Number -> Number -> Position
+pos = { x: _, y: _ }
+
 data City = City String Position
 
 tennenlohe :: City
-tennenlohe = City "Tennenlohe" (Position 0.2 0.5)
+tennenlohe = City "Tennenlohe" (pos 0.2 0.5)
 
 leipzig :: City
-leipzig = City "Leipzig" (Position 0.7 0.6)
+leipzig = City "Leipzig" (pos 0.7 0.6)
 
 cities :: Array City
 cities = [ tennenlohe, leipzig ]
@@ -46,7 +50,7 @@ ui = H.component { render, eval }
   svgns = Just (namespace "http://www.w3.org/2000/svg")
   svgAttr name value = Attr Nothing (attrName name) value
 
-  svgCity city@(City cityName (Position x y)) =
+  svgCity city@(City cityName { x, y }) =
     [ Element svgns (tagName "circle") [ svgAttr "class" "city"
                                        , svgAttr "r" "10"
                                        , svgAttr "cx" (showPercent x)
@@ -62,7 +66,7 @@ ui = H.component { render, eval }
                                      ] [ HH.text cityName ]
     ]
 
-  svgConnection (Tuple (City cn1 (Position x1 y1)) (City cn2 (Position x2 y2))) =
+  svgConnection (Tuple (City cn1 { x: x1, y: y1 }) (City cn2 { x: x2, y: y2 })) =
     Element svgns (tagName "line") [ svgAttr "class" "connection"
                                    , svgAttr "x1" (showPercent x1)
                                    , svgAttr "y1" (showPercent y1)
@@ -70,7 +74,7 @@ ui = H.component { render, eval }
                                    , svgAttr "y2" (showPercent y2)
                                    ] []
 
-  svgPlayer (Position x y) =
+  svgPlayer { x, y } =
     Element svgns (tagName "circle") [ svgAttr "class" "player"
                                      , svgAttr "r" "12"
                                      , svgAttr "cx" (showPercent x)
