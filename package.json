@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "postinstall": "bower install",
-    "build": "pulp browserify --optimise --to dist/app.js",
+    "build": "pulp browserify --optimise --transform uglifyify --to dist/app.js",
     "watch": "pulp -w browserify --to dist/app.js"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "bower": "^1.8.0",
     "pulp": "^9.0.1",
     "purescript": "^0.10.1",
-    "purescript-psa": "^0.3.9"
+    "purescript-psa": "^0.3.9",
+    "uglifyify": "^3.0.4"
   }
 }
