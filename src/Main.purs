@@ -3,6 +3,7 @@ module Main where
 import Prelude
 import Config as C
 import Control.Monad.Eff (Eff)
+import Game as G
 import Halogen as H
 import Halogen.HTML.Indexed as HH
 import Halogen.HTML.Events.Indexed as HE
@@ -10,27 +11,32 @@ import Halogen.Util as HU
 import Svg as S
 
 
+config :: C.Config
+config = C.config
+
+
 data Query a = MovePlayer C.City a
 
 type UiState = { playerPosition :: C.City }
 
 initialState :: UiState
-initialState = { playerPosition: C.tennenlohe }
+initialState = { playerPosition: config.playerStart }
 
 ui :: forall g. H.Component UiState Query g
 ui = H.component { render, eval }
   where
-
-  svgImages = [ S.svgWorldMap ]
-  svgConnections = map S.svgConnection C.connections
-  svgCities = C.cities >>= (\city -> S.svgCity city (HE.input_ (MovePlayer city)))
-  svgPlayers (C.City _ position) = [ S.svgPlayer position ]
 
   render :: UiState -> H.ComponentHTML Query
   render state =
     HH.div_
       [ S.svg [] (svgImages <> svgConnections <> svgCities <> svgPlayers state.playerPosition)
       ]
+    where
+    svgImages = [ S.svgWorldMap ]
+    svgPlayers (C.City _ position) = [ S.svgPlayer position ]
+    svgConnections = map S.svgConnection config.connections
+    svgCities = config.cities >>= renderCity
+    renderCity city = S.svgCity city (HE.input_ (MovePlayer city)) (G.isReachable config.connections state.playerPosition city)
 
   eval :: Query ~> H.ComponentDSL UiState Query g
   eval (MovePlayer city next) = do

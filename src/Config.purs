@@ -1,23 +1,29 @@
 module Config where
 
+import Prelude
 import Data.Tuple (Tuple(..))
 
 
 type Position = { x :: Number, y :: Number }
 
-pos :: Number -> Number -> Position
-pos x y = { x, y }
-
 data City = City String Position
+derive instance eqCity :: Eq City
 
-tennenlohe :: City
-tennenlohe = City "Tennenlohe" (pos 0.2 0.5)
+type Config = { cities :: Array City
+              , playerStart :: City
+              , connections :: Array (Tuple City City)
+              }
 
-leipzig :: City
-leipzig = City "Leipzig" (pos 0.7 0.6)
+config :: Config
+config = { cities: [ atlanta, miami, chicago ]
+         , playerStart: atlanta
+         , connections: [ Tuple atlanta miami
+                        , Tuple atlanta chicago
+                        ]
+         }
+  where
+  atlanta = City "Atlanta" (pos 0.21 0.35)
+  miami = City "Miami" (pos 0.25 0.43)
+  chicago = City "Chicago" (pos 0.19 0.28)
 
-cities :: Array City
-cities = [ tennenlohe, leipzig ]
-
-connections :: Array (Tuple City City)
-connections = [ Tuple tennenlohe leipzig ]
+  pos x y = { x, y }

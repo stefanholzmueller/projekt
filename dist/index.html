@@ -7,28 +7,31 @@
     to   { opacity: 1; }
   }
 
-  body {
-    height: 100%;
-  }
-
-  body > div {
-    height: 100%;
-  }
-
   svg {
+    width: 1500px;
+    height: 675px;
+  }
+
+  .world-map {
     width: 100%;
-    height: 100%;
   }
 
   .city {
-    fill: grey;
+    fill: gray;
     cursor: pointer;
+  }
+  .city.reachable {
+    fill: black;
+    animation: fill 1s;
   }
 
   .city-label {
-    stroke: green;
-    fill: black;
+    fill: gray;
+    font-family: sans-serif;
     cursor: pointer;
+  }
+  .city-label.reachable {
+    fill: black;
   }
 
   .player {

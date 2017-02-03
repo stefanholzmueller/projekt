@@ -30,22 +30,23 @@ svgWorldMap =
                                   , svgAttr "href" "worldmap.jpg"
                                   ] []
 
-svgCity :: forall i p. City -> (Event MouseEvent -> EventHandler (Maybe i)) -> Array (HTML p i)
-svgCity (City cityName { x, y }) event =
-  [ Element svgns (tagName "circle") [ svgAttr "class" "city"
-                                     , svgAttr "r" "10"
-                                     , svgAttr "cx" (showPercent x)
-                                     , svgAttr "cy" (showPercent y)
-                                     , onClick event
-                                     ] []
-  , Element svgns (tagName "text") [ svgAttr "class" "city-label"
-                                   , svgAttr "x" (showPercent x)
-                                   , svgAttr "y" (showPercent (y + 0.02))
-                                   , svgAttr "text-anchor" "middle"
-                                   , svgAttr "alignment-baseline" "central"
-                                   , onClick event
-                                   ] [ text cityName ]
+svgCity :: forall i p. City -> (Event MouseEvent -> EventHandler (Maybe i)) -> Boolean -> Array (HTML p i)
+svgCity (City cityName { x, y }) event isReachable =
+  [ Element svgns (tagName "circle") ([ svgAttr "class" ("city" <> reachableSuffix)
+                                      , svgAttr "r" "10"
+                                      , svgAttr "cx" (showPercent x)
+                                      , svgAttr "cy" (showPercent y)
+                                      ] <> eventHandlers) []
+  , Element svgns (tagName "text") ([ svgAttr "class" ("city-label" <> reachableSuffix)
+                                    , svgAttr "x" (showPercent x)
+                                    , svgAttr "y" (showPercent (y + 0.03))
+                                    , svgAttr "text-anchor" "middle"
+                                    , svgAttr "alignment-baseline" "central"
+                                    ] <> eventHandlers) [ text cityName ]
   ]
+  where
+    reachableSuffix = if isReachable then " reachable" else ""
+    eventHandlers = if isReachable then [ onClick event ] else []
 
 svgConnection :: forall i p. Tuple City City -> HTML p i
 svgConnection (Tuple (City cn1 { x: x1, y: y1 }) (City cn2 { x: x2, y: y2 })) =
