@@ -21,6 +21,7 @@ ui :: forall g. H.Component UiState Query g
 ui = H.component { render, eval }
   where
 
+  svgImages = [ S.svgWorldMap ]
   svgConnections = map S.svgConnection C.connections
   svgCities = C.cities >>= (\city -> S.svgCity city (HE.input_ (MovePlayer city)))
   svgPlayers (C.City _ position) = [ S.svgPlayer position ]
@@ -28,7 +29,7 @@ ui = H.component { render, eval }
   render :: UiState -> H.ComponentHTML Query
   render state =
     HH.div_
-      [ S.svg [] (svgConnections <> svgCities <> svgPlayers state.playerPosition)
+      [ S.svg [] (svgImages <> svgConnections <> svgCities <> svgPlayers state.playerPosition)
       ]
 
   eval :: Query ~> H.ComponentDSL UiState Query g

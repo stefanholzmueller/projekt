@@ -24,6 +24,12 @@ svgAttr name value = Attr Nothing (attrName name) value
 svg :: forall i p. Array (Prop i) -> Array (HTML p i) -> HTML p i
 svg = Element svgns (tagName "svg")
 
+svgWorldMap :: forall i p. HTML p i
+svgWorldMap =
+  Element svgns (tagName "image") [ svgAttr "class" "world-map"
+                                  , svgAttr "href" "worldmap.jpg"
+                                  ] []
+
 svgCity :: forall i p. City -> (Event MouseEvent -> EventHandler (Maybe i)) -> Array (HTML p i)
 svgCity (City cityName { x, y }) event =
   [ Element svgns (tagName "circle") [ svgAttr "class" "city"
