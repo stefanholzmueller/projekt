@@ -7,7 +7,8 @@ import Data.Tuple (Tuple(..))
 type Position = { x :: Number, y :: Number }
 
 data City = City String Position
-derive instance eqCity :: Eq City
+instance eqCity :: Eq City
+  where eq (City cn1 _) (City cn2 _) = cn1 == cn2
 
 type Config = { cities :: Array City
               , playerStart :: City
@@ -15,15 +16,15 @@ type Config = { cities :: Array City
               }
 
 config :: Config
-config = { cities: [ atlanta, miami, chicago ]
+config = { cities: [ atlanta, chicago, miami ]
          , playerStart: atlanta
-         , connections: [ Tuple atlanta miami
-                        , Tuple atlanta chicago
+         , connections: [ Tuple atlanta chicago
+                        , Tuple atlanta miami
                         ]
          }
   where
   atlanta = City "Atlanta" (pos 0.21 0.35)
-  miami = City "Miami" (pos 0.25 0.43)
   chicago = City "Chicago" (pos 0.19 0.28)
+  miami = City "Miami" (pos 0.25 0.43)
 
   pos x y = { x, y }
