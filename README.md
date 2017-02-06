@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stefanholzmueller/projekt.svg?branch=master)](https://travis-ci.org/stefanholzmueller/projekt)
+
 ## Setup
 
 - Prerequisite: Node.js must be installed
