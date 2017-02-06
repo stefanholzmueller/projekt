@@ -9,6 +9,8 @@ type Position = { x :: Number, y :: Number }
 data City = City String Position
 instance eqCity :: Eq City
   where eq (City cn1 _) (City cn2 _) = cn1 == cn2
+instance showCity :: Show City
+  where show (City cn _) = "City:" <> cn
 
 type Config = { cities :: Array City
               , playerStart :: City
