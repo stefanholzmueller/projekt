@@ -7,6 +7,7 @@ install:
   - npm install
 script:
   - npm run build
+  - pulp test
 after_success:
 - >-
   test $TRAVIS_TAG &&
