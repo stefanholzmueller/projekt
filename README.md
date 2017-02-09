@@ -30,7 +30,7 @@
 - **...JavaScript?** Started with it. Even with linting and TypeScript, it is hard to make JS truly safe.
 - **...Elm?** Tried it. Elm apparently lacks server-side support. Also, it forces a certain architecture, and the language is limited.
 - **...Scala?** Thought about it. Scala is complex, and allows purely functional programming, but not by default.
-- **...Haskell?** Didn't really think about it. PureScript is a more modern and clean variant of Haskell, designed for compilation to JS.
+- **...Haskell?** Didn't really think about it. PureScript is a more modern variant of Haskell, designed for compilation to JS.
 
 Very interesting read: [Selecting a platform - JavaScript vs Elm vs PureScript vs GHCjs vs Scalajs](http://mutanatum.com/posts/2017-01-12-Browser-FP-Head-to-Head.html)
 
