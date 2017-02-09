@@ -1,9 +1,9 @@
 module Test.Game where
 
 import Prelude
+import Config as C
 import Game as G
-import Config (City(..))
-import Data.Array ((!!), length)
+import Data.Array (filter, length, (!!))
 import Data.Maybe (fromJust)
 import Data.Tuple (Tuple(..))
 import Partial.Unsafe (unsafePartial)
@@ -18,25 +18,25 @@ sample1 xs = do
   pure (unsafePartial (fromJust (xs !! i)))
 
 
-makeCity :: Int -> City
-makeCity n = City ("City" <> show n) { x: 0.0, y: 0.0 }
+makeCity :: Int -> C.City
+makeCity n = C.newCity ("City" <> show n) 0.0 0.0
 
-cities :: Array City
+cities :: Array C.City
 cities = [ makeCity 1, makeCity 2, makeCity 3 ]
 
-connections :: Array (Tuple City City)
-connections = [ Tuple (makeCity 1) (makeCity 2)
-              , Tuple (makeCity 3) (makeCity 2)
+connections :: Array C.Connection
+connections = [ C.newConnection (makeCity 1) (makeCity 2) C.NormalConnection
+              , C.newConnection (makeCity 3) (makeCity 2) C.NormalConnection
               ]
 
-newtype RandomConnection = RandomConnection (Tuple City City)
+newtype RandomConnection = RandomConnection C.Connection
 instance arbConnection :: Arbitrary RandomConnection
   where
   arbitrary = do
-    conn <- sample1 connections
+    conn <- sample1 (filter (\conn -> conn.connectionType == C.NormalConnection) connections)
     pure (RandomConnection conn)
 
-newtype TwoRandomCities = TwoRandomCities (Tuple City City)
+newtype TwoRandomCities = TwoRandomCities (Tuple C.City C.City)
 instance arbTwoRandomCities :: Arbitrary TwoRandomCities
   where
   arbitrary = do
@@ -52,7 +52,7 @@ main = do
 
 
 twoCitiesFromConnectionsAreReachable :: RandomConnection -> Result
-twoCitiesFromConnectionsAreReachable (RandomConnection (Tuple city1 city2)) =
+twoCitiesFromConnectionsAreReachable (RandomConnection { between: (Tuple city1 city2), connectionType }) =
   (G.isReachable connections city2 city1) <?> "Not connected: " <> show city1 <> " and " <> show city2
 
 twoRandomCitiesAreReachableOrNotButSymmetric :: TwoRandomCities -> Result

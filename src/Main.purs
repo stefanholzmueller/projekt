@@ -34,7 +34,7 @@ ui = H.component { render, eval }
     where
     svgImages = [ S.svgWorldMap ]
     svgPlayers (C.City _ position) = [ S.svgPlayer position ]
-    svgConnections = map S.svgConnection config.connections
+    svgConnections = config.connections >>= S.svgConnection
     svgCities = config.cities >>= renderCity
     renderCity city = S.svgCity city (HE.input_ (MovePlayer city)) (G.isReachable config.connections state.playerPosition city)
 

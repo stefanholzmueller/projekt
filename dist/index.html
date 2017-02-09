@@ -14,6 +14,7 @@
 
   .world-map {
     width: 100%;
+    opacity: 0.7;
   }
 
   .city {
@@ -22,7 +23,7 @@
   }
   .city.reachable {
     fill: black;
-    animation: fill 1s;
+    transition: fill 2s;
   }
 
   .city-label {
@@ -32,13 +33,13 @@
   }
   .city-label.reachable {
     fill: black;
+    transition: fill 2s;
   }
 
   .player {
     fill: blue;
     transition: all 1s ease-in-out;
-    animation-name: fadein;
-    animation-duration: 3s;
+    animation: fadein 3s;
   }
 
   .connection {

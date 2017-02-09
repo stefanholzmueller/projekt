@@ -1,7 +1,7 @@
 module Svg where
 
 import Prelude
-import Config (City(..), Position)
+import Config as C
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Halogen.HTML.Core (HTML(..), Namespace, Prop(..), attrName, namespace, tagName)
@@ -30,8 +30,8 @@ svgWorldMap =
                                   , svgAttr "href" "worldmap.jpg"
                                   ] []
 
-svgCity :: forall i p. City -> (Event MouseEvent -> EventHandler (Maybe i)) -> Boolean -> Array (HTML p i)
-svgCity (City cityName { x, y }) event isReachable =
+svgCity :: forall i p. C.City -> (Event MouseEvent -> EventHandler (Maybe i)) -> Boolean -> Array (HTML p i)
+svgCity (C.City cityName { x, y }) event isReachable =
   [ Element svgns (tagName "circle") ([ svgAttr "class" ("city" <> reachableSuffix)
                                       , svgAttr "r" "10"
                                       , svgAttr "cx" (showPercent x)
@@ -48,16 +48,27 @@ svgCity (City cityName { x, y }) event isReachable =
     reachableSuffix = if isReachable then " reachable" else ""
     eventHandlers = if isReachable then [ onClick event ] else []
 
-svgConnection :: forall i p. Tuple City City -> HTML p i
-svgConnection (Tuple (City cn1 { x: x1, y: y1 }) (City cn2 { x: x2, y: y2 })) =
-  Element svgns (tagName "line") [ svgAttr "class" "connection"
-                                 , svgAttr "x1" (showPercent x1)
-                                 , svgAttr "y1" (showPercent y1)
-                                 , svgAttr "x2" (showPercent x2)
-                                 , svgAttr "y2" (showPercent y2)
-                                 ] []
+svgConnection :: forall i p. C.Connection -> Array (HTML p i)
+svgConnection { between: (Tuple (C.City cn1 pos1) (C.City cn2 pos2)), connectionType } =
+  case connectionType of
+    C.NormalConnection -> [ svgLine pos1.x pos1.y pos2.x pos2.y
+                          ]
+    C.WrapsAroundMap -> [ svgLine pos1.x pos1.y 0.0 y1'
+                        , svgLine pos2.x pos2.y 1.0 y2'
+                        ]
+  where
+  svgLine x1 y1 x2 y2 = Element svgns (tagName "line") [ svgAttr "class" "connection"
+                                                       , svgAttr "x1" (showPercent x1)
+                                                       , svgAttr "y1" (showPercent y1)
+                                                       , svgAttr "x2" (showPercent x2)
+                                                       , svgAttr "y2" (showPercent y2)
+                                                       ] []
+  dx = pos2.x - pos1.x
+  dy = pos2.y - pos1.y
+  y1' = pos1.y + dy * pos1.x / (1.0 - dx)
+  y2' = pos1.x + dx * pos1.y / (1.0 - dy)
 
-svgPlayer :: forall i p. Position -> HTML p i
+svgPlayer :: forall i p. C.Position -> HTML p i
 svgPlayer { x, y } =
   Element svgns (tagName "circle") [ svgAttr "class" "player"
                                    , svgAttr "r" "12"
