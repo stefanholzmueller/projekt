@@ -3,7 +3,7 @@
   "scripts": {
     "postinstall": "bower install",
     "b": "pulp browserify --to dist/app.js",
-    "build": "pulp browserify --optimise --transform uglifyify --to dist/app.js",
+    "build": "pulp browserify --optimise --transform uglifyify --main Frontend --to dist/app.js",
     "watch": "pulp -w browserify --to dist/app.js"
   },
   "dependencies": {
