@@ -1,7 +1,7 @@
-module Game where
+module Backend.Game where
 
 import Prelude
-import Config as C
+import Backend.Config as C
 import Data.Array (any)
 import Data.Tuple (Tuple(..))
 

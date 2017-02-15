@@ -1,4 +1,4 @@
-module Config where
+module Backend.Config where
 
 import Prelude
 import Data.Tuple (Tuple(..))

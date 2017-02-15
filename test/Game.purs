@@ -1,8 +1,8 @@
 module Test.Game where
 
 import Prelude
-import Config as C
-import Game as G
+import Backend.Config as C
+import Backend.Game as G
 import Data.Array (filter, length, (!!))
 import Data.Maybe (fromJust)
 import Data.Tuple (Tuple(..))

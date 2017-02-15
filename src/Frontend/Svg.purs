@@ -1,7 +1,7 @@
-module Svg where
+module Frontend.Svg where
 
 import Prelude
-import Config as C
+import Backend.Config as C
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Halogen.HTML.Core (HTML(..), Namespace, Prop(..), attrName, namespace, tagName)

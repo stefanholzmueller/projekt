@@ -1,14 +1,14 @@
-module Main where
+module Frontend where
 
 import Prelude
-import Config as C
+import Backend.Config as C
 import Control.Monad.Eff (Eff)
-import Game as G
+import Backend.Game as G
 import Halogen as H
 import Halogen.HTML.Indexed as HH
 import Halogen.HTML.Events.Indexed as HE
 import Halogen.Util as HU
-import Svg as S
+import Frontend.Svg as S
 
 
 config :: C.Config
